@@ -1,5 +1,5 @@
 {
-  "name": "barisathis-server",
+  "name": "barisathi-server",
   "version": "0.0.1",
   "main": "src/server.ts",
   "scripts": {

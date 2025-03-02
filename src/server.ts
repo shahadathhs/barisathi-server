@@ -6,19 +6,19 @@ import app from './app'
 import { configuration } from './app/config/config'
 
 const port: number = configuration.port as number
-const DATABASE_URL: string = configuration.mongo.url as string
+const db: string = configuration.mongo.url as string
 
 let server: Server
 
 async function start() {
   // ** Connect to MongoDB **
-  await mongoose.connect(DATABASE_URL).then(() => {
+  await mongoose.connect(db).then(() => {
     console.info('DB connected!')
   })
 
   // ** Start Server **
   server = app.listen(port, () => {
-    console.info(`Bike Store 🚀 server is running on port ${port}!`)
+    console.info(`Bari Sathi server is running on port ${port}!`)
   })
 }
 

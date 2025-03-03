@@ -41,6 +41,10 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -53,6 +57,11 @@ UserSchema.pre<IUser>('save', async function (next) {
   // Check for duplicate email only when creating a new user
   if (this.isNew) {
     const existingUser = await User.findOne({ email: this.email })
+    // * if existing user isDeleted, update isDeleted to false
+    if (existingUser && existingUser.isDeleted) {
+      existingUser.isDeleted = false
+      await existingUser.save()
+    }
     if (existingUser) {
       throw new AppError(httpStatusCode.BAD_REQUEST, 'Email already exists')
     }

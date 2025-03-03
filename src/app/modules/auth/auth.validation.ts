@@ -14,18 +14,6 @@ const registerUserZodSchema = z.object({
   })
 })
 
-const loginUserZodSchema = z.object({
-  body: z.object({
-    email: z
-      .string({ required_error: 'Email is required' })
-      .email({ message: 'Invalid email address' }),
-    password: z
-      .string({ required_error: 'Password is required' })
-      .min(6, { message: 'Password must be at least 6 characters' })
-      .max(20, { message: 'Password must be at most 20 characters' })
-  })
-})
-
 const updateProfileZodSchema = z.object({
   body: z.object({
     name: z
@@ -39,6 +27,5 @@ const updateProfileZodSchema = z.object({
 
 export const AuthValidation = {
   registerUserZodSchema,
-  loginUserZodSchema,
   updateProfileZodSchema
 }

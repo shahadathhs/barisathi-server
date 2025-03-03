@@ -41,7 +41,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-const deactivateUser = async (req: Request, res: Response, next: NextFunction) => {
+const updateDeletedStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
     const result = await AuthService.deactivateUser(id)
@@ -135,7 +135,7 @@ const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-const updateActive = async (req: Request, res: Response, next: NextFunction) => {
+const updateActiveStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
     const result = await AuthService.updateActive(id)
@@ -156,10 +156,10 @@ const updateActive = async (req: Request, res: Response, next: NextFunction) => 
 export const AuthController = {
   registerUser,
   loginUser,
-  deactivateUser,
+  updateDeletedStatus,
   updateProfile,
   updatePassword,
   getAllUsers,
   updateRole,
-  updateActive
+  updateActiveStatus
 }

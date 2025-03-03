@@ -4,7 +4,7 @@ import mongoose, { Model, Schema } from 'mongoose'
 import { httpStatusCode } from '../../enum/statusCode'
 import AppError from '../../errorHandling/errors/AppError'
 
-import { IUser } from './auth.user.interface'
+import { IUser, UserRole } from './auth.user.interface'
 
 // * User Schema
 const UserSchema: Schema<IUser> = new mongoose.Schema(
@@ -22,16 +22,21 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
       trim: true,
       match: [/\S+@\S+\.\S+/, 'Please provide a valid email']
     },
+    phone: {
+      type: String,
+      required: [true, 'Please add a phone number'],
+      trim: true
+    },
     password: {
       type: String,
       required: [true, 'Please add a password'],
       minlength: [6, 'Password must be at least 6 characters'],
-      select: false // * Exclude password field when querying by default
+      select: false // Exclude password field when querying by default
     },
     role: {
       type: String,
-      enum: ['customer', 'admin'],
-      default: 'customer'
+      enum: UserRole,
+      default: UserRole.TENANT
     },
     isActive: {
       type: Boolean,
@@ -45,9 +50,12 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
 
 // * Pre-save middleware to validate unique email
 UserSchema.pre<IUser>('save', async function (next) {
-  const existingUser = await User.findOne({ email: this.email })
-  if (existingUser) {
-    throw new AppError(httpStatusCode.BAD_REQUEST, 'Email already exists')
+  // Check for duplicate email only when creating a new user
+  if (this.isNew) {
+    const existingUser = await User.findOne({ email: this.email })
+    if (existingUser) {
+      throw new AppError(httpStatusCode.BAD_REQUEST, 'Email already exists')
+    }
   }
   next()
 })
@@ -62,8 +70,7 @@ UserSchema.pre<IUser>('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt)
     next()
   } catch (error) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    next(error as any)
+    next(error as Error)
   }
 })
 
@@ -79,14 +86,17 @@ UserSchema.methods.updatePassword = async function (newPassword: string): Promis
   await this.save()
 }
 
-// *  Instance method to get user profile with password
+// * Instance method to get user profile (without sensitive data)
 UserSchema.methods.toProfileJSON = function () {
   return {
     id: this._id,
     name: this.name,
     email: this.email,
+    phone: this.phone,
     role: this.role,
-    password: this.password // * Include password for profile retrieval
+    isActive: this.isActive,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
   }
 }
 

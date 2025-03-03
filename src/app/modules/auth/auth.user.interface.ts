@@ -1,6 +1,13 @@
 import mongoose, { Document } from 'mongoose'
 
-export type TRole = 'admin' | 'customer'
+export enum UserRole {
+  ADMIN = 'admin',
+  LANDLORD = 'landlord',
+  TENANT = 'tenant'
+}
+
+// TRole is now derived from the UserRole enum values
+export type TRole = (typeof UserRole)[keyof typeof UserRole]
 
 export type TJwtPayload = {
   email: string
@@ -11,6 +18,7 @@ export type TJwtPayload = {
 export interface IUser extends Document {
   name: string
   email: string
+  phone: string
   password: string
   role: TRole
   isActive: boolean
@@ -22,8 +30,11 @@ export interface IUser extends Document {
     id: string
     name: string
     email: string
+    phone: string
     role: TRole
-    password: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
   }
   isAdmin(): boolean
 }

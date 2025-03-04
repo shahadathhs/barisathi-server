@@ -8,8 +8,9 @@ import { ListingService } from './listing.service'
 
 // * Create a new listing (Landlord only)
 const createListing = async (req: Request, res: Response, next: NextFunction) => {
-  // You may extract landlord ID from req.user if needed.
-  const result = await ListingService.createListing(req.body)
+  const user = req.user
+  const payload = { ...req.body, landlord: user._id }
+  const result = await ListingService.createListing(payload)
   sendResponse(res, {
     statusCode: httpStatusCode.CREATED,
     success: true,
@@ -48,7 +49,8 @@ const getListingById = async (req: Request, res: Response, next: NextFunction) =
 // * Update a listing (Landlord only)
 const updateListing = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params
-  const result = await ListingService.updateListing(id, req.body)
+  const userId = req.user.userId
+  const result = await ListingService.updateListing(id, req.body, userId)
   sendResponse(res, {
     statusCode: httpStatusCode.OK,
     success: true,
@@ -61,7 +63,8 @@ const updateListing = async (req: Request, res: Response, next: NextFunction) =>
 // * Delete a listing (Landlord only)
 const deleteListing = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params
-  const result = await ListingService.deleteListing(id)
+  const userId = req.user.userId
+  const result = await ListingService.deleteListing(id, userId)
   sendResponse(res, {
     statusCode: httpStatusCode.OK,
     success: true,

@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose"
+import mongoose, { Document } from 'mongoose'
 
 // * Interface for Listing
 export interface IListing extends Document {

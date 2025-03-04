@@ -7,6 +7,7 @@ import sendResponse from '../../utils/sendResponse'
 
 import { AuthService } from './auth.service'
 
+// * Register a new user
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await AuthService.registerUser(req.body)
@@ -24,6 +25,7 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
   }
 }
 
+// * Login an existing user
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await AuthService.loginUser(req.body)
@@ -41,24 +43,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-const updateDeletedStatus = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params
-    const result = await AuthService.deactivateUser(id)
-
-    sendResponse(res, {
-      statusCode: httpStatusCode.OK,
-      success: true,
-      message: 'User deactivated successfully.',
-      data: result
-    })
-  } catch (error) {
-    const errorResponse = simplifyError(error)
-    sendError(res, errorResponse)
-    next(error)
-  }
-}
-
+// * Update user profile (Accessible to Landlords and Tenants)
 const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user
@@ -79,6 +64,7 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
   }
 }
 
+// * Update user password (Accessible to Landlords and Tenants)
 const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user
@@ -99,6 +85,26 @@ const updatePassword = async (req: Request, res: Response, next: NextFunction) =
   }
 }
 
+// * Update user delete status (Accessible to Landlords and Tenants)
+const updateDeletedStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params
+    const result = await AuthService.updateDeletedStatus(id)
+
+    sendResponse(res, {
+      statusCode: httpStatusCode.OK,
+      success: true,
+      message: 'User deactivated successfully.',
+      data: result
+    })
+  } catch (error) {
+    const errorResponse = simplifyError(error)
+    sendError(res, errorResponse)
+    next(error)
+  }
+}
+
+// * Retrieve all users (Admin only)
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await AuthService.getAllUsers(req.query)
@@ -116,10 +122,11 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+// * Update user role (Admin only)
 const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
-    const result = await AuthService.updateRole(id)
+    const result = await AuthService.updateRole(id, req.body)
 
     sendResponse(res, {
       statusCode: httpStatusCode.OK,
@@ -135,10 +142,11 @@ const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
+// * Update user active status (Admin only)
 const updateActiveStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
-    const result = await AuthService.updateActive(id)
+    const result = await AuthService.updateActiveStatus(id)
     sendResponse(res, {
       statusCode: httpStatusCode.OK,
       success: true,
@@ -156,9 +164,9 @@ const updateActiveStatus = async (req: Request, res: Response, next: NextFunctio
 export const AuthController = {
   registerUser,
   loginUser,
-  updateDeletedStatus,
   updateProfile,
   updatePassword,
+  updateDeletedStatus,
   getAllUsers,
   updateRole,
   updateActiveStatus

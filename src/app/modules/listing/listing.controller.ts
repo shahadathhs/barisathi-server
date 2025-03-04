@@ -1,0 +1,80 @@
+import { NextFunction, Request, Response } from 'express'
+
+import { httpStatusCode } from '../../enum/statusCode'
+import { asyncHandler } from '../../utils/asyncHandler'
+import sendResponse from '../../utils/sendResponse'
+
+import { ListingService } from './listing.service'
+
+// * Create a new listing (Landlord only)
+const createListing = async (req: Request, res: Response, next: NextFunction) => {
+  // You may extract landlord ID from req.user if needed.
+  const result = await ListingService.createListing(req.body)
+  sendResponse(res, {
+    statusCode: httpStatusCode.CREATED,
+    success: true,
+    message: 'Listing created successfully.',
+    data: result
+  })
+  next()
+}
+
+// * Get all listings (Public)
+const getAllListings = async (req: Request, res: Response, next: NextFunction) => {
+  const filters = req.query
+  const result = await ListingService.getAllListings(filters)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Listings retrieved successfully.',
+    data: result
+  })
+  next()
+}
+
+// * Get listing details (Public)
+const getListingById = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const result = await ListingService.getListingById(id)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Listing details retrieved successfully.',
+    data: result
+  })
+  next()
+}
+
+// * Update a listing (Landlord only)
+const updateListing = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const result = await ListingService.updateListing(id, req.body)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Listing updated successfully.',
+    data: result
+  })
+  next()
+}
+
+// * Delete a listing (Landlord only)
+const deleteListing = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const result = await ListingService.deleteListing(id)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Listing deleted successfully.',
+    data: result
+  })
+  next()
+}
+
+export const ListingController = {
+  createListing: asyncHandler(createListing),
+  getAllListings: asyncHandler(getAllListings),
+  getListingById: asyncHandler(getListingById),
+  updateListing: asyncHandler(updateListing),
+  deleteListing: asyncHandler(deleteListing)
+}

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { AuthRoutes } from '../modules/auth/auth.route'
+import { AuthRoutes } from '../modules/auth/auth.routes'
 import { paymentRoutes } from '../modules/payments/payment.route'
 
 const appRoutes = Router()

@@ -14,10 +14,64 @@ const createListing = async (payload: Partial<IListing>): Promise<IListing> => {
   return populatedListing
 }
 
-// * Retrieve listings with optional filters (location, bedrooms, etc.)
-const getAllListings = async (filters: any = {}): Promise<IListing[]> => {
-  const listings = await Listing.find(filters)
-  return listings
+// * Retrieve listings with optional filters (location, bedrooms, rent amount) and pagination
+const getAllListings = async (
+  queryOptions: {
+    location?: string
+    bedrooms?: number
+    minRent?: number
+    maxRent?: number
+    page?: number
+    limit?: number
+  } = {}
+): Promise<{ listings: IListing[]; metadata: { total: number; page: number; limit: number } }> => {
+  const { location, bedrooms, minRent, maxRent, page = 1, limit = 10 } = queryOptions
+
+  // * Build filter object dynamically based on provided query options
+  const filter: {
+    location?: { $regex: string; $options: string }
+    bedrooms?: number
+    rentAmount?: { $gte?: number; $lte?: number }
+  } = {}
+
+  // * Filter by location using case-insensitive regex
+  if (location) {
+    filter.location = { $regex: location, $options: 'i' }
+  }
+
+  // * Filter by exact number of bedrooms
+  if (bedrooms !== undefined) {
+    filter.bedrooms = bedrooms
+  }
+
+  // * Filter by rent amount within a range
+  if (minRent !== undefined || maxRent !== undefined) {
+    filter.rentAmount = {}
+    if (minRent !== undefined) {
+      filter.rentAmount.$gte = minRent
+    }
+    if (maxRent !== undefined) {
+      filter.rentAmount.$lte = maxRent
+    }
+  }
+
+  // * Calculate how many documents to skip
+  const skip = (page - 1) * limit
+
+  // * Fetch the listings with pagination
+  const listings = await Listing.find(filter).skip(skip).limit(limit)
+
+  // * Get the total count of listings matching the filter
+  const total = await Listing.countDocuments(filter)
+
+  return {
+    listings,
+    metadata: {
+      total,
+      page,
+      limit
+    }
+  }
 }
 
 // * Get single listing details by ID

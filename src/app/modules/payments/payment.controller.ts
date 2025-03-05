@@ -24,7 +24,7 @@ const createCheckoutSession = async (req: Request, res: Response, next: NextFunc
 
 // * Retrieve transactions for the logged-in user (Tenant or Landlord)
 const getTransactions = async (req: Request, res: Response, next: NextFunction) => {
-  const user: CustomJwtPayload = req.user 
+  const user: CustomJwtPayload = req.user
   const payments = await PaymentService.getTransactionsForUser(user.userId, user.role as TRole)
   sendResponse(res, {
     statusCode: httpStatusCode.OK,

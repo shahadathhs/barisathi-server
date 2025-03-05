@@ -18,11 +18,7 @@ router.post(
 )
 
 // * Get all bookings (Admin only)
-router.get(
-  '/',
-  Authentication(UserRole.ADMIN),
-  BookingController.getAllBookings
-)
+router.get('/', Authentication(UserRole.ADMIN), BookingController.getAllBookings)
 
 // * Get booking details (Accessible by Admin and booking owner)
 router.get(
@@ -40,10 +36,6 @@ router.patch(
 )
 
 // * Delete booking (Admin only)
-router.delete(
-  '/:id',
-  Authentication(UserRole.ADMIN),
-  BookingController.deleteBooking
-)
+router.delete('/:id', Authentication(UserRole.ADMIN), BookingController.deleteBooking)
 
 export const BookingRoutes = router

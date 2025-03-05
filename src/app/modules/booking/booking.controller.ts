@@ -6,7 +6,6 @@ import sendResponse from '../../utils/sendResponse'
 
 import { BookingService } from './booking.service'
 
-
 // * Create a new booking (Tenant only)
 const createBooking = async (req: Request, res: Response, next: NextFunction) => {
   // * Attach logged-in user ID to the booking

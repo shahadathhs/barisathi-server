@@ -1,17 +1,27 @@
-import express from 'express'
+import { Router } from 'express'
 
 import Authentication from '../../middlewares/authentication'
+import validateRequest from '../../middlewares/validateRequest'
 import { UserRole } from '../auth/auth.user.interface'
 
-import { paymentController } from './payment.controller'
+import { PaymentController } from './payment.controller'
+import { PaymentValidation } from './payment.validation'
 
-const router = express.Router()
+const router = Router()
 
+// * Create checkout session (Accessible to TENANT)
 router.post(
   '/create-checkout-session',
   Authentication(UserRole.TENANT),
-
-  paymentController.createCheckoutSession
+  validateRequest(PaymentValidation.createCheckoutSessionSchema),
+  PaymentController.createCheckoutSession
 )
 
-export const paymentRoutes = router
+// * Get transaction records (Accessible to TENANT and LANDLORD)
+router.get(
+  '/transactions',
+  Authentication(UserRole.TENANT, UserRole.LANDLORD),
+  PaymentController.getTransactions
+)
+
+export const PaymentRoutes = router

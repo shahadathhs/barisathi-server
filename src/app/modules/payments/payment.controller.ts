@@ -1,57 +1,41 @@
-import { Request, Response, NextFunction } from 'express'
-import Stripe from 'stripe'
+import { NextFunction, Request, Response } from 'express'
 
-import { configuration } from '../../config/config'
-import sendError from '../../errorHandling/sendError'
-import simplifyError from '../../errorHandling/simplifyError'
+import { httpStatusCode } from '../../enum/statusCode'
+import { CustomJwtPayload } from '../../interface'
+import { asyncHandler } from '../../utils/asyncHandler'
+import sendResponse from '../../utils/sendResponse'
+import { TRole } from '../auth/auth.user.interface'
 
-const secretKey = configuration.stripe.secretKey
-const clientURl = configuration.client.url
+import { PaymentService } from './payment.service'
 
-const createCheckoutSession = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { quantity, price, productName, email, productId } = req.body
-
-    // * step 1: create a stripe instance
-    const stripe = new Stripe(secretKey)
-
-    // * step 2: generate a random 32 byte string
-    const randomString = crypto.randomUUID()
-
-    // * step 2: create a checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: productName
-            },
-            unit_amount: Math.round(price * 100)
-          },
-          quantity: quantity
-        }
-      ],
-      metadata: { productId, email },
-      mode: 'payment',
-      success_url: `${clientURl}/checkout/success?${randomString}=${randomString}&productId=${productId}&${randomString}2=${randomString}&email=${email}&quantity=${quantity}&${randomString}3=${randomString}&price=${price}`,
-      cancel_url: `${clientURl}/checkout/cancel?productId=${productId}`
-    })
-
-    // * step 3: send the session id to the client
-    res.json({ success: true, session, message: 'Checkout session created successfully.' })
-  } catch (error) {
-    const errorResponse = simplifyError(error)
-    sendError(res, errorResponse)
-    next(error)
-  }
+// * Create checkout session (Tenant only)
+const createCheckoutSession = async (req: Request, res: Response, next: NextFunction) => {
+  // Expecting bookingId, amount, currency, email, clientURL, tenantId, landlordId in the request body
+  const payload = req.body
+  const sessionUrl = await PaymentService.createCheckoutSession(payload)
+  sendResponse(res, {
+    statusCode: httpStatusCode.CREATED,
+    success: true,
+    message: 'Checkout session created successfully',
+    data: { url: sessionUrl }
+  })
+  next()
 }
 
-export const paymentController = {
-  createCheckoutSession: createCheckoutSession
+// * Retrieve transactions for the logged-in user (Tenant or Landlord)
+const getTransactions = async (req: Request, res: Response, next: NextFunction) => {
+  const user: CustomJwtPayload = req.user 
+  const payments = await PaymentService.getTransactionsForUser(user.userId, user.role as TRole)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Transactions retrieved successfully',
+    data: payments
+  })
+  next()
+}
+
+export const PaymentController = {
+  createCheckoutSession: asyncHandler(createCheckoutSession),
+  getTransactions: asyncHandler(getTransactions)
 }

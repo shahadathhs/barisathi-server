@@ -25,7 +25,8 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
     phone: {
       type: String,
       required: [true, 'Please add a phone number'],
-      trim: true
+      trim: true,
+      unique: true
     },
     password: {
       type: String,
@@ -64,6 +65,18 @@ UserSchema.pre<IUser>('save', async function (next) {
     }
     if (existingUser) {
       throw new AppError(httpStatusCode.BAD_REQUEST, 'Email already exists')
+    }
+  }
+  next()
+})
+
+// * Pre-save middleware to validate unique phone number
+UserSchema.pre<IUser>('save', async function (next) {
+  // Check for duplicate phone number only when creating a new user
+  if (this.isNew) {
+    const existingUser = await User.findOne({ phone: this.phone })
+    if (existingUser) {
+      throw new AppError(httpStatusCode.BAD_REQUEST, 'Phone number already exists')
     }
   }
   next()

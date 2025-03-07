@@ -19,7 +19,7 @@ const registerUser = async (payload: Partial<IUser>): Promise<Partial<IUser>> =>
 const loginUser = async (payload: {
   email: string
   password: string
-}): Promise<{ token: string; name: string; email: string; role: TRole }> => {
+}): Promise<{ token: string; user: Partial<IUser> }> => {
   const { email, password } = payload
 
   // * Try to get user data with password by email
@@ -49,9 +49,12 @@ const loginUser = async (payload: {
 
   return {
     token,
-    name: user.name,
-    email: user.email,
-    role: user.role
+    user: {
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      _id: user._id
+    }
   }
 }
 

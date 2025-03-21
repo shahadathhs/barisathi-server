@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { ZodSchema } from 'zod'
 
-import sendError from '../errorHandling/sendError'
-import simplifyError from '../errorHandling/simplifyError'
+import sendError from '../errors/sendError'
+import simplifyError from '../errors/simplifyError'
 
 export default function validateRequest(schema: ZodSchema) {
   return async (req: Request, res: Response, next: NextFunction) => {

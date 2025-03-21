@@ -3,11 +3,11 @@ import { ZodError } from 'zod'
 import { httpStatusCode } from '../enum/statusCode'
 import { IErrorResponse, IErrorSource } from '../interface/error'
 
-import AppError from './errors/AppError'
-import handleCastError from './errors/handleCastError'
-import handleDuplicateError from './errors/handleDuplicateError'
-import handleValidationError from './errors/handleValidationError'
-import handleZodError from './errors/handleZodError'
+import AppError from './functions/AppError'
+import handleCastError from './functions/handleCastError'
+import handleDuplicateError from './functions/handleDuplicateError'
+import handleValidationError from './functions/handleValidationError'
+import handleZodError from './functions/handleZodError'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const simplifyError = (err: any): IErrorResponse => {

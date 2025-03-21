@@ -1,3 +1,4 @@
+import { httpStatusCode } from '../../enum/statusCode'
 import { IErrorResponse, IErrorSource, IMongooseError } from '../../interface/error'
 
 const handleDuplicateError = (err: IMongooseError): IErrorResponse => {
@@ -12,10 +13,8 @@ const handleDuplicateError = (err: IMongooseError): IErrorResponse => {
     }
   ]
 
-  const statusCode = 400
-
   return {
-    statusCode,
+    statusCode: httpStatusCode.BAD_REQUEST,
     message: 'Duplicate value error.',
     errorSources
   }

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 import { httpStatusCode } from '../enum/statusCode'
-import AppError from '../errorHandling/errors/AppError'
+import AppError from '../errors/functions/AppError'
 
 /**
  * Validates if a provided id is a valid MongoDB ObjectId.

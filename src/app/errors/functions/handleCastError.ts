@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+import { httpStatusCode } from '../../enum/statusCode'
 import { IErrorResponse, IErrorSource } from '../../interface/error'
 
 const handleCastError = (error: mongoose.Error.CastError): IErrorResponse => {
@@ -10,10 +11,8 @@ const handleCastError = (error: mongoose.Error.CastError): IErrorResponse => {
     }
   ]
 
-  const statusCode = 400
-
   return {
-    statusCode,
+    statusCode: httpStatusCode.BAD_REQUEST,
     message: 'Invalid input data.',
     errorSources
   }

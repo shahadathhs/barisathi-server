@@ -10,7 +10,7 @@ export default [
   { languageOptions: { globals: globals.node } },
   {
     plugins: {
-      import: importPlugin,
+      import: importPlugin
     },
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
@@ -21,10 +21,11 @@ export default [
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           'newlines-between': 'always',
-          alphabetize: { order: 'asc', caseInsensitive: true },
-        },
+          alphabetize: { order: 'asc', caseInsensitive: true }
+        }
       ],
-    },
+      // 'import/no-unresolved': 'error'
+    }
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended

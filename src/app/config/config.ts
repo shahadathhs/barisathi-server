@@ -15,8 +15,7 @@ export const configuration = {
   },
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY ?? '',
-    publicKey: process.env.STRIPE_PUBLIC_KEY ?? '',
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? ''
+    publicKey: process.env.STRIPE_PUBLIC_KEY ?? ''
   },
   client: {
     url: process.env.CLIENT_URL ?? 'http://localhost:5173'

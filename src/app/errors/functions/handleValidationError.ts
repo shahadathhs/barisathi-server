@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+import { httpStatusCode } from '../../enum/statusCode'
 import { IErrorResponse, IErrorSource } from '../../interface/error'
 
 const handleValidationError = (err: mongoose.Error.ValidationError): IErrorResponse => {
@@ -12,10 +13,8 @@ const handleValidationError = (err: mongoose.Error.ValidationError): IErrorRespo
     }
   )
 
-  const statusCode = 400
-
   return {
-    statusCode,
+    statusCode: httpStatusCode.BAD_REQUEST,
     message: 'Validation Error',
     errorSources
   }

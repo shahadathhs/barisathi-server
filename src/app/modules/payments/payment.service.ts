@@ -1,6 +1,6 @@
 import { configuration } from '../../config/config'
 import { httpStatusCode } from '../../enum/statusCode'
-import AppError from '../../errorHandling/errors/AppError'
+import AppError from '../../errors/functions/AppError'
 import { TRole, UserRole } from '../auth/auth.user.interface'
 
 import { stripe } from './payment.config'

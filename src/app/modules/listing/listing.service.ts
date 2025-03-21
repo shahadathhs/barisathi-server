@@ -1,5 +1,5 @@
 import { httpStatusCode } from '../../enum/statusCode'
-import AppError from '../../errorHandling/errors/AppError'
+import AppError from '../../errors/functions/AppError'
 
 import { IListing } from './listing.interface'
 import Listing from './listing.model'

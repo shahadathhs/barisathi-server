@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import mongoose from 'mongoose'
 
 import { httpStatusCode } from '../../enum/statusCode'
-import AppError from '../../errorHandling/errors/AppError'
+import AppError from '../../errors/functions/AppError'
 
 import { IUser, TJwtPayload, TRole } from './auth.user.interface'
 import User from './auth.user.model'

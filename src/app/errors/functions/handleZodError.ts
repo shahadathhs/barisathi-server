@@ -1,5 +1,6 @@
 import { ZodError, ZodIssue } from 'zod'
 
+import { httpStatusCode } from '../../enum/statusCode'
 import { IErrorResponse, IErrorSource } from '../../interface/error'
 
 const handleZodError = (err: ZodError): IErrorResponse => {
@@ -10,11 +11,9 @@ const handleZodError = (err: ZodError): IErrorResponse => {
     }
   })
 
-  const statusCode = 400
-
   return {
-    statusCode,
-    message: 'Validation Error',
+    statusCode: httpStatusCode.BAD_REQUEST,
+    message: 'Validation Error. Enter valid data',
     errorSources
   }
 }

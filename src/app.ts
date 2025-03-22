@@ -21,7 +21,7 @@ app.use(apiInfoLogger)
 
 // ** Default Routes **
 app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Bike Shop Server!')
+  res.send('Welcome to Bari Sathi Server!')
 })
 app.get('/api', (req: Request, res: Response) => {
   res.send('This is the root API route!')
@@ -31,7 +31,9 @@ app.get('/api', (req: Request, res: Response) => {
 app.use('/api', appRoutes)
 
 // ** API Endpoint Not Found **
-app.use('*', notFound)
+app.use('*', (req: Request, res: Response) => {
+  notFound(req, res)
+})
 
 // ** Error Handler **
 app.use(errorHandler)

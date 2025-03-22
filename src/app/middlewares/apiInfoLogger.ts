@@ -1,46 +1,58 @@
 import { Request, Response, NextFunction } from 'express'
+import winston from 'winston'
 
 import { configuration } from '../config/config'
-import { logger } from '../log/logger'
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+  transports: [new winston.transports.Console()]
+})
 
 const apiInfoLogger = (req: Request, res: Response, next: NextFunction) => {
-  // * Log the incoming request details
+  // Log request details
   const logDetails = {
     method: req.method,
     url: req.url,
-    body: req.body && Object.keys(req.body).length > 0 ? JSON.stringify(req.body) : 'N/A',
-    query: req.query && Object.keys(req.query).length > 0 ? JSON.stringify(req.query) : 'N/A',
-    params: req.params && Object.keys(req.params).length > 0 ? JSON.stringify(req.params) : 'N/A',
+    body: req.body && Object.keys(req.body).length > 0 ? req.body : 'N/A',
+    query: req.query && Object.keys(req.query).length > 0 ? req.query : 'N/A',
+    params: req.params && Object.keys(req.params).length > 0 ? req.params : 'N/A',
     token: configuration.env === 'development' ? req.headers.authorization || 'N/A' : null,
     cookies: configuration.env === 'development' ? req.cookies || 'N/A' : null
   }
 
-  logger.info(`Incoming Request: ${JSON.stringify(logDetails)}`)
+  logger.info(JSON.stringify({ type: 'request', logDetails }, null, 2)) // JSON log format
 
-  // * Capture response body
+  // Capture response body safely
   let responseBody: unknown = null
-  const originalSend = res.send
-  const originalJson = res.json
+  const originalSend = res.send.bind(res)
+  const originalJson = res.json.bind(res)
 
   res.send = function (body: unknown): Response {
-    responseBody = body
-    return originalSend.call(this, body)
+    if (!res.headersSent) {
+      responseBody = body
+      return originalSend(body)
+    }
+    return res
   }
 
   res.json = function (body: unknown): Response {
-    responseBody = body
-    return originalJson.call(this, body)
+    if (!res.headersSent) {
+      responseBody = body
+      return originalJson(body)
+    }
+    return res
   }
 
-  // * Log response details after the response is sent
   res.on('finish', () => {
     const responseLog = {
+      type: 'response',
       statusCode: res.statusCode,
-      responseBody: responseBody ? JSON.stringify(responseBody) : 'No response body',
+      responseBody: responseBody ? responseBody : 'No response body',
       responseHeaders: res.getHeaders()
     }
 
-    logger.info(`Response Sent: ${JSON.stringify(responseLog)}`)
+    logger.info(JSON.stringify(responseLog, null, 2)) // JSON log format
   })
 
   next()

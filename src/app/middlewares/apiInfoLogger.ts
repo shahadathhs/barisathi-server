@@ -5,12 +5,12 @@ import { configuration } from '../config/config'
 
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+  format: winston.format.combine(winston.format.timestamp(), winston.format.prettyPrint()),
   transports: [new winston.transports.Console()]
 })
 
 const apiInfoLogger = (req: Request, res: Response, next: NextFunction) => {
-  // Log request details
+  // Log request details by passing an object directly
   const logDetails = {
     method: req.method,
     url: req.url,
@@ -21,7 +21,7 @@ const apiInfoLogger = (req: Request, res: Response, next: NextFunction) => {
     cookies: configuration.env === 'development' ? req.cookies || 'N/A' : null
   }
 
-  logger.info(JSON.stringify({ type: 'request', logDetails }, null, 2)) // JSON log format
+  logger.info({ type: 'request', logDetails })
 
   // Capture response body safely
   let responseBody: unknown = null
@@ -45,14 +45,21 @@ const apiInfoLogger = (req: Request, res: Response, next: NextFunction) => {
   }
 
   res.on('finish', () => {
+    let prettyResponseBody: unknown = responseBody
+    if (typeof responseBody === 'string') {
+      try {
+        prettyResponseBody = JSON.parse(responseBody)
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error: unknown) {
+        // If it's not valid JSON, keep it as the original string.
+        prettyResponseBody = responseBody
+      }
+    }
     const responseLog = {
       type: 'response',
-      statusCode: res.statusCode,
-      responseBody: responseBody ? responseBody : 'No response body',
-      responseHeaders: res.getHeaders()
+      responseBody: prettyResponseBody || 'No response body'
     }
-
-    logger.info(JSON.stringify(responseLog, null, 2)) // JSON log format
+    logger.info(responseLog)
   })
 
   next()

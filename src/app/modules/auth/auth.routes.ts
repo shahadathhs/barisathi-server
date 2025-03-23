@@ -19,18 +19,18 @@ router.post(
 // * Login an existing user
 router.post('/login', AuthController.loginUser)
 
-// * Update user profile (Accessible to Landlords and Tenants)
+// * Update user profile (Accessible to all authenticated users)
 router.patch(
   '/update-profile',
-  Authentication(UserRole.LANDLORD, UserRole.TENANT),
+  Authentication(UserRole.LANDLORD, UserRole.TENANT, UserRole.ADMIN),
   validateRequest(AuthValidation.updateProfileZodSchema),
   AuthController.updateProfile
 )
 
-// * Update user password (Accessible to Landlords and Tenants)
+// * Update user password (Accessible to all authenticated users)
 router.patch(
   '/update-password',
-  Authentication(UserRole.LANDLORD, UserRole.TENANT),
+  Authentication(UserRole.LANDLORD, UserRole.TENANT, UserRole.ADMIN),
   AuthController.updatePassword
 )
 

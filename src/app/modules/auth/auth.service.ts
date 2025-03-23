@@ -60,12 +60,18 @@ const loginUser = async (payload: {
 }
 
 // * Update user profile (Accessible to Landlords and Tenants)
-const updateProfile = async (id: string, payload: Partial<IUser>): Promise<IUser> => {
+const updateProfile = async (id: string, payload: Partial<IUser>): Promise<Partial<IUser>> => {
   const updatedUser = await User.findByIdAndUpdate(id, payload, { new: true })
   if (!updatedUser) {
     throw new AppError(httpStatusCode.NOT_FOUND, 'User not found')
   }
-  return updatedUser
+  return {
+    phone: updatedUser.phone,
+    email: updatedUser.email,
+    name: updatedUser.name,
+    role: updatedUser.role,
+    _id: updatedUser._id
+  }
 }
 
 // * Update user password (Accessible to Landlords and Tenants)

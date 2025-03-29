@@ -9,7 +9,7 @@ import { ListingService } from './listing.service'
 // * Create a new listing (Landlord only)
 const createListing = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user
-  const payload = { ...req.body, landlord: user._id }
+  const payload = { ...req.body, landlord: user.userId }
   const result = await ListingService.createListing(payload)
   sendResponse(res, {
     statusCode: httpStatusCode.CREATED,

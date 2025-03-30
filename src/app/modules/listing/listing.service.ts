@@ -30,7 +30,7 @@ const getAllListings = async (
   // * Build filter object dynamically based on provided query options
   const filter: {
     location?: { $regex: string; $options: string }
-    bedrooms?: number
+    bedrooms?: number | { $gte: number }
     rentAmount?: { $gte?: number; $lte?: number }
   } = {}
 
@@ -39,9 +39,15 @@ const getAllListings = async (
     filter.location = { $regex: location, $options: 'i' }
   }
 
-  // * Filter by exact number of bedrooms
+  // * Apply bedrooms filter:
+  // - If bedrooms is 1,2,3 use an exact match.
+  // - If bedrooms is 4, use $gte.
   if (bedrooms !== undefined) {
-    filter.bedrooms = bedrooms
+    if (bedrooms < 4) {
+      filter.bedrooms = bedrooms
+    } else {
+      filter.bedrooms = { $gte: bedrooms }
+    }
   }
 
   // * Filter by rent amount within a range

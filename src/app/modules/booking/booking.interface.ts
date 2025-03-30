@@ -10,8 +10,10 @@ export type TBookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
 
 export interface IBooking extends Document {
   listing: mongoose.Types.ObjectId
-  user: mongoose.Types.ObjectId
+  tenant: mongoose.Types.ObjectId
+  landlord: mongoose.Types.ObjectId
   status: TBookingStatus
   checkInDate: Date
   checkOutDate: Date
+  tenantMessage: string
 }

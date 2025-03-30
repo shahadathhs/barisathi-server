@@ -11,7 +11,9 @@ const createBookingSchema = z.object({
     // * Check-out date must be a valid date string
     checkOutDate: z
       .string({ required_error: 'Check-out date is required' })
-      .refine(val => !isNaN(Date.parse(val)), { message: 'Invalid check-out date' })
+      .refine(val => !isNaN(Date.parse(val)), { message: 'Invalid check-out date' }),
+    tenantMessage: z.string({ required_error: 'Tenant message is required' }),
+    landlord: z.string({ required_error: 'Landlord ID is required' })
   })
 })
 

@@ -8,10 +8,10 @@ import { BookingService } from './booking.service'
 
 // * Create a new booking (Tenant only)
 const createBooking = async (req: Request, res: Response, next: NextFunction) => {
-  // * Attach logged-in user ID to the booking
+  // * Attach logged-in user ID as the tenant to the booking
   const bookingPayload = {
     ...req.body,
-    user: req.user.userId
+    tenant: req.user.userId
   }
   const result = await BookingService.createBooking(bookingPayload)
   sendResponse(res, {

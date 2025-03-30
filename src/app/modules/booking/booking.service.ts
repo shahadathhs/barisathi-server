@@ -6,7 +6,7 @@ import Booking from './booking.model'
 
 // * Create a new booking
 const createBooking = async (payload: Partial<IBooking>): Promise<IBooking> => {
-  const booking = await Booking.create(payload)
+  const booking = (await Booking.create(payload)).populate('listing landlord tenant')
   return booking
 }
 

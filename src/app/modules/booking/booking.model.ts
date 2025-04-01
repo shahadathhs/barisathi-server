@@ -4,6 +4,7 @@ import { BookingStatus, IBooking } from './booking.interface'
 
 const bookingSchema = new Schema<IBooking>(
   {
+    _id: { type: Schema.Types.ObjectId, auto: true },
     listing: { type: Schema.Types.ObjectId, ref: 'Listing', required: true },
     landlord: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     tenant: { type: Schema.Types.ObjectId, ref: 'User', required: true },

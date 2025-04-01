@@ -43,12 +43,7 @@ const getAllBookings = async (req: Request, res: Response, next: NextFunction) =
 // * Get all bookings for a tenant (Tenant only)
 const getAllBookingsForTenant = async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.user
-  const queryOptions = {
-    page: Number(req.query.page) || 1,
-    limit: Number(req.query.limit) || 10,
-    status: req.query.status as string | undefined
-  }
-  const result = await BookingService.getAllBookingsForTenant(userId, queryOptions)
+  const result = await BookingService.getAllBookingsForTenant(userId)
   sendResponse(res, {
     statusCode: httpStatusCode.OK,
     success: true,

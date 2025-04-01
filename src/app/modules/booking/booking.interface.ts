@@ -1,9 +1,11 @@
 import mongoose, { Document } from 'mongoose'
 
 export enum BookingStatus {
-  PENDING = 'pending',
-  CONFIRMED = 'confirmed',
-  CANCELLED = 'cancelled'
+  PENDING = 'pending', // * tenant requested for booking to landlord (default status)
+  APPROVED = 'approved', // * landlord approved tenant request & waiting for tenant to complete payment
+  REJECTED = 'rejected', // * landlord rejected tenant request
+  CONFIRMED = 'confirmed', // * tenant completed payment
+  CANCELLED = 'cancelled' // * tenant did not completed payment & cancelled
 }
 
 export type TBookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]

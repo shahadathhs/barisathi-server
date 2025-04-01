@@ -20,17 +20,27 @@ router.post(
 // * Get all bookings (Admin only)
 router.get('/', Authentication(UserRole.ADMIN), BookingController.getAllBookings)
 
-// * Get booking details (Accessible by Admin and booking owner)
+// * Get all bookings for a tenant (Tenant only)
+router.get('/tenant', Authentication(UserRole.TENANT), BookingController.getAllBookingsForTenant)
+
+// * Get all bookings for a landlord (Landlord only)
+router.get(
+  '/landlord',
+  Authentication(UserRole.LANDLORD),
+  BookingController.getAllBookingsForLandlord
+)
+
+// * Get booking details (Accessible to admin and tenant & landlord of the that booking)
 router.get(
   '/:id',
-  Authentication(UserRole.ADMIN, UserRole.TENANT),
+  Authentication(UserRole.ADMIN, UserRole.TENANT, UserRole.LANDLORD),
   BookingController.getBookingById
 )
 
-// * Update booking status (Admin only)
+// * Update booking status (Landlord (the landlord of the listing) only)
 router.patch(
   '/:id/status',
-  Authentication(UserRole.ADMIN),
+  Authentication(UserRole.LANDLORD),
   validateRequest(BookingValidation.updateBookingSchema),
   BookingController.updateBookingStatus
 )

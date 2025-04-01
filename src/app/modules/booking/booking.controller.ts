@@ -40,7 +40,38 @@ const getAllBookings = async (req: Request, res: Response, next: NextFunction) =
   next()
 }
 
-// * Get booking details (Accessible by Admin and the booking owner)
+// * Get all bookings for a tenant (Tenant only)
+const getAllBookingsForTenant = async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.user
+  const queryOptions = {
+    page: Number(req.query.page) || 1,
+    limit: Number(req.query.limit) || 10,
+    status: req.query.status as string | undefined
+  }
+  const result = await BookingService.getAllBookingsForTenant(userId, queryOptions)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Bookings retrieved successfully',
+    data: result
+  })
+  next()
+}
+
+// * Get all bookings for a landlord (Landlord only)
+const getAllBookingsForLandlord = async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.user
+  const result = await BookingService.getAllBookingsForLandlord(userId)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Bookings retrieved successfully',
+    data: result
+  })
+  next()
+}
+
+// * Get booking details (Accessible to admin and tenant & landlord of the that booking)
 const getBookingById = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params
   const result = await BookingService.getBookingById(id)
@@ -53,7 +84,7 @@ const getBookingById = async (req: Request, res: Response, next: NextFunction) =
   next()
 }
 
-// * Update booking status (Admin only)
+// * Update booking status (Landlord (the landlord of the listing) only)
 const updateBookingStatus = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params
   const { status } = req.body
@@ -83,6 +114,8 @@ const deleteBooking = async (req: Request, res: Response, next: NextFunction) =>
 export const BookingController = {
   createBooking: asyncHandler(createBooking),
   getAllBookings: asyncHandler(getAllBookings),
+  getAllBookingsForTenant: asyncHandler(getAllBookingsForTenant),
+  getAllBookingsForLandlord: asyncHandler(getAllBookingsForLandlord),
   getBookingById: asyncHandler(getBookingById),
   updateBookingStatus: asyncHandler(updateBookingStatus),
   deleteBooking: asyncHandler(deleteBooking)

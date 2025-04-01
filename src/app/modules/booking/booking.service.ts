@@ -79,7 +79,7 @@ const getAllBookingsForLandlord = async (landlordId: string): Promise<IBooking[]
 
 // * Get booking details by ID
 const getBookingById = async (id: string): Promise<IBooking> => {
-  const booking = await Booking.findById(id)
+  const booking = await Booking.findById(id).populate('listing landlord tenant')
   if (!booking) {
     throw new AppError(httpStatusCode.NOT_FOUND, 'Booking not found')
   }
@@ -89,9 +89,11 @@ const getBookingById = async (id: string): Promise<IBooking> => {
 // * Update booking status
 const updateBookingStatus = async (
   id: string,
-  payload: { status: 'pending' | 'confirmed' | 'cancelled' }
+  payload: { status: 'pending' | 'confirmed' | 'cancelled' | 'approved' | 'rejected' }
 ): Promise<IBooking> => {
-  const updatedBooking = await Booking.findByIdAndUpdate(id, payload, { new: true })
+  const updatedBooking = await Booking.findByIdAndUpdate(id, payload, { new: true }).populate(
+    'listing landlord tenant'
+  )
   if (!updatedBooking) {
     throw new AppError(httpStatusCode.NOT_FOUND, 'Booking not found')
   }

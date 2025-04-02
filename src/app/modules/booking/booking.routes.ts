@@ -37,10 +37,10 @@ router.get(
   BookingController.getBookingById
 )
 
-// * Update booking status (Landlord (the landlord of the listing) only)
+// * Update booking status (Landlord & Tenant (the landlord of the listing) only)
 router.patch(
   '/:id/status',
-  Authentication(UserRole.LANDLORD),
+  Authentication(UserRole.LANDLORD, UserRole.TENANT),
   validateRequest(BookingValidation.updateBookingSchema),
   BookingController.updateBookingStatus
 )

@@ -28,11 +28,15 @@ const getAllBookings = async (queryOptions: TQueryOptions = {}): Promise<TGetBoo
 
   // * Fetch bookings with pagination
   const bookings = await Booking.find(filter).skip(skip).limit(limit)
+  const populatedData = await Booking.populate(bookings, {
+    path: 'listing landlord tenant',
+    select: '-password'
+  })
   // * Count total matching bookings
   const total = await Booking.countDocuments(filter)
 
   return {
-    bookings,
+    bookings: populatedData,
     metadata: {
       total,
       page,

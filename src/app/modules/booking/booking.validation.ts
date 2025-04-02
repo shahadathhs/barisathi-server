@@ -20,7 +20,9 @@ const createBookingSchema = z.object({
 const updateBookingSchema = z.object({
   body: z.object({
     // * Booking status must be one of the allowed values
-    status: z.enum(['pending', 'confirmed', 'cancelled', 'approved', 'rejected'], { required_error: 'Status is required' })
+    status: z.enum(['pending', 'confirmed', 'cancelled', 'approved', 'rejected'], {
+      required_error: 'Status is required'
+    })
   })
 })
 

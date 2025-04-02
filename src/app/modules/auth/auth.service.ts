@@ -1,8 +1,7 @@
+import AppError from 'app/errors/functions/AppError'
+import { httpStatusCode } from 'app/utils/enum/statusCode'
 import bcrypt from 'bcryptjs'
 import mongoose from 'mongoose'
-
-import AppError from '../../errors/functions/AppError'
-import { httpStatusCode } from '../../utils/enum/statusCode'
 
 import { IUser, TJwtPayload, TRole } from './auth.user.interface'
 import User from './auth.user.model'

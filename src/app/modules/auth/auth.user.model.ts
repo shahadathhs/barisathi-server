@@ -1,10 +1,10 @@
+import AppError from 'app/errors/functions/AppError'
+import { httpStatusCode } from 'app/utils/enum/statusCode'
+import { UserRole } from 'app/utils/enum/userRole'
 import bcrypt from 'bcryptjs'
 import mongoose, { Model, Schema } from 'mongoose'
 
-import AppError from '../../errors/functions/AppError'
-import { httpStatusCode } from '../../utils/enum/statusCode'
-
-import { IUser, UserRole } from './auth.user.interface'
+import { IUser } from './auth.user.interface'
 
 // * User Schema
 const UserSchema: Schema<IUser> = new mongoose.Schema(

@@ -1,8 +1,7 @@
+import { AuthRoutes } from 'app/modules/auth/auth.routes'
+import { BookingRoutes } from 'app/modules/booking/booking.routes'
+import { ListingRoutes } from 'app/modules/listing/listing.routes'
 import { Router } from 'express'
-
-import { AuthRoutes } from '../modules/auth/auth.routes'
-import { BookingRoutes } from '../modules/booking/booking.routes'
-import { ListingRoutes } from '../modules/listing/listing.routes'
 
 const appRoutes = Router()
 

@@ -1,10 +1,9 @@
+import Authentication from 'app/middlewares/authentication'
+import validateRequest from 'app/middlewares/validateRequest'
+import { UserRole } from 'app/utils/enum/userRole'
 import { Router } from 'express'
 
-import Authentication from '../../middlewares/authentication'
-import validateRequest from '../../middlewares/validateRequest'
-
 import { AuthController } from './auth.controller'
-import { UserRole } from './auth.user.interface'
 import { AuthValidation } from './auth.validation'
 
 const router = Router()

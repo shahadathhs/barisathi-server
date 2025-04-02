@@ -1,9 +1,8 @@
 import { Server } from 'http'
 
+import app from 'app'
+import { configuration } from 'app/config/config'
 import mongoose from 'mongoose'
-
-import app from './app'
-import { configuration } from './app/config/config'
 
 const port: number = configuration.port as number
 const db: string = configuration.mongo.url as string

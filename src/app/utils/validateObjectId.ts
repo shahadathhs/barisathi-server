@@ -1,6 +1,5 @@
+import AppError from 'app/errors/functions/AppError'
 import mongoose from 'mongoose'
-
-import AppError from '../errors/functions/AppError'
 
 import { httpStatusCode } from './enum/statusCode'
 

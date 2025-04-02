@@ -1,7 +1,6 @@
+import { configuration } from 'app/config/config'
 import { Request, Response, NextFunction } from 'express'
 import winston from 'winston'
-
-import { configuration } from '../config/config'
 
 const logger = winston.createLogger({
   level: 'info',

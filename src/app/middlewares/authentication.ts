@@ -1,14 +1,13 @@
+import AppError from 'app/errors/functions/AppError'
+import sendError from 'app/errors/sendError'
+import simplifyError from 'app/errors/simplifyError'
+import { TJwtPayload, TRole } from 'app/modules/auth/auth.user.interface'
+import User from 'app/modules/auth/auth.user.model'
+import { verifyToken } from 'app/modules/auth/auth.utils'
+import { httpStatusCode } from 'app/utils/enum/statusCode'
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
-
-import AppError from '../errors/functions/AppError'
-import sendError from '../errors/sendError'
-import simplifyError from '../errors/simplifyError'
-import { TJwtPayload, TRole } from '../modules/auth/auth.user.interface'
-import User from '../modules/auth/auth.user.model'
-import { verifyToken } from '../modules/auth/auth.utils'
-import { httpStatusCode } from '../utils/enum/statusCode'
 
 export default function Authentication(...requiredRoles: TRole[]) {
   return async (req: Request, res: Response, next: NextFunction) => {

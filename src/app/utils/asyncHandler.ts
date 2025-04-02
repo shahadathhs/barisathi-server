@@ -1,7 +1,6 @@
+import sendError from 'app/errors/sendError'
+import simplifyError from 'app/errors/simplifyError'
 import { NextFunction, Request, Response } from 'express'
-
-import sendError from '../errors/sendError'
-import simplifyError from '../errors/simplifyError'
 
 // * A helper function to wrap async controllers
 export const asyncHandler = (

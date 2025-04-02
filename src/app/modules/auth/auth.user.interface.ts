@@ -1,10 +1,5 @@
+import { UserRole } from 'app/utils/enum/userRole'
 import mongoose, { Document } from 'mongoose'
-
-export enum UserRole {
-  ADMIN = 'admin',
-  LANDLORD = 'landlord',
-  TENANT = 'tenant'
-}
 
 // TRole is now derived from the UserRole enum values
 export type TRole = (typeof UserRole)[keyof typeof UserRole]

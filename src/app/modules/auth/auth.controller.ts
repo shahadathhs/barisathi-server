@@ -1,8 +1,7 @@
+import { asyncHandler } from 'app/utils/asyncHandler'
+import { httpStatusCode } from 'app/utils/enum/statusCode'
+import sendResponse from 'app/utils/sendResponse'
 import { NextFunction, Request, Response } from 'express'
-
-import { asyncHandler } from '../../utils/asyncHandler'
-import { httpStatusCode } from '../../utils/enum/statusCode'
-import sendResponse from '../../utils/sendResponse'
 
 import { AuthService } from './auth.service'
 

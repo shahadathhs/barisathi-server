@@ -1,10 +1,9 @@
+import apiInfoLogger from 'app/middlewares/apiInfoLogger'
+import errorHandler from 'app/middlewares/errorHandler'
+import notFound from 'app/middlewares/notFound'
+import appRoutes from 'app/routes/router'
 import cors from 'cors'
 import express, { Application, Request, Response } from 'express'
-
-import apiInfoLogger from './app/middlewares/apiInfoLogger'
-import errorHandler from './app/middlewares/errorHandler'
-import notFound from './app/middlewares/notFound'
-import appRoutes from './app/routes/router'
 
 // ** express app **
 const app: Application = express()

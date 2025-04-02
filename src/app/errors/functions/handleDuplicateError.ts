@@ -1,5 +1,5 @@
-import { httpStatusCode } from '../../utils/enum/statusCode'
-import { IErrorResponse, IErrorSource, IMongooseError } from '../../utils/interface/error'
+import { httpStatusCode } from 'app/utils/enum/statusCode'
+import { IErrorResponse, IErrorSource, IMongooseError } from 'app/utils/interface/error'
 
 const handleDuplicateError = (err: IMongooseError): IErrorResponse => {
   // Extract field name and value causing the duplicate error

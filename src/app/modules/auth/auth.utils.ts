@@ -1,7 +1,6 @@
+import { configuration } from 'app/config/config'
 import jwt from 'jsonwebtoken'
 import ms from 'ms'
-
-import { configuration } from '../../config/config'
 
 import { TJwtPayload } from './auth.user.interface'
 

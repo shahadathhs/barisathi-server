@@ -1,8 +1,7 @@
+import Authentication from 'app/middlewares/authentication'
+import validateRequest from 'app/middlewares/validateRequest'
+import { UserRole } from 'app/utils/enum/userRole'
 import { Router } from 'express'
-
-import Authentication from '../../middlewares/authentication'
-import validateRequest from '../../middlewares/validateRequest'
-import { UserRole } from '../auth/auth.user.interface'
 
 import { ListingController } from './listing.controller'
 import { ListingValidation } from './listing.validation'

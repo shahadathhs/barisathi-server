@@ -1,8 +1,7 @@
+import sendError from 'app/errors/sendError'
+import simplifyError from 'app/errors/simplifyError'
 import { Request, Response, NextFunction } from 'express'
 import { ZodSchema } from 'zod'
-
-import sendError from '../errors/sendError'
-import simplifyError from '../errors/simplifyError'
 
 export default function validateRequest(schema: ZodSchema) {
   return async (req: Request, res: Response, next: NextFunction) => {

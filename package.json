@@ -3,14 +3,15 @@
   "version": "0.0.1",
   "main": "src/server.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "npm install && tsc && node ./dist/server.js",
-    "start:prod": "npm install && tsc && nodemon ./dist/server.js",
-    "start:dev": "npm install && ts-node-dev --respawn --transpile-only src/server.ts",
-    "clean": "rm -rf dist && rm -rf node_modules && rm -rf package-lock.json && npm install",
+    "build": "tsc && tsc-alias",
+    "start": "tsc && tsc-alias && node ./dist/server.js",
+    "start:prod": "tsc && tsc-alias && nodemon ./dist/server.js",
+    "start:dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "clean": "rm -rf dist && rm -rf node_modules",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+    "format:check": "prettier --ignore-path .gitignore --check \"**/*.+(js|ts|json)\"",
+    "format:fix": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "re:deploy": "tsc && vercel --prod",
     "jwtSecret": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
   },
@@ -44,6 +45,8 @@
     "globals": "^15.12.0",
     "prettier": "^3.3.3",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.13",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.15.0"
   }

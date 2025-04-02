@@ -20,6 +20,13 @@ router.post(
 // * Get all listings (Public)
 router.get('/', ListingController.getAllListings)
 
+// * Get all listings for a landlord (Landlord only)
+router.get(
+  '/landlord',
+  Authentication(UserRole.LANDLORD),
+  ListingController.getAllListingsForLandlord
+)
+
 // * Get listing details (Public)
 router.get('/:id', ListingController.getListingById)
 

@@ -33,6 +33,20 @@ const getAllListings = async (req: Request, res: Response, next: NextFunction) =
   next()
 }
 
+// * Get all listings for a landlord (Landlord only)
+const getAllListingsForLandlord = async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.user
+  const filters = req.query
+  const result = await ListingService.getAllListingsForLandlord(userId, filters)
+  sendResponse(res, {
+    statusCode: httpStatusCode.OK,
+    success: true,
+    message: 'Listings retrieved successfully.',
+    data: result
+  })
+  next()
+}
+
 // * Get listing details (Public)
 const getListingById = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params
@@ -77,6 +91,7 @@ const deleteListing = async (req: Request, res: Response, next: NextFunction) =>
 export const ListingController = {
   createListing: asyncHandler(createListing),
   getAllListings: asyncHandler(getAllListings),
+  getAllListingsForLandlord: asyncHandler(getAllListingsForLandlord),
   getListingById: asyncHandler(getListingById),
   updateListing: asyncHandler(updateListing),
   deleteListing: asyncHandler(deleteListing)

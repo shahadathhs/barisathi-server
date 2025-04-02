@@ -80,6 +80,75 @@ const getAllListings = async (
   }
 }
 
+const getAllListingsForLandlord = async (
+  landlordId: string,
+  queryOptions: {
+    location?: string
+    bedrooms?: number
+    minRent?: number
+    maxRent?: number
+    page?: number
+    limit?: number
+  } = {}
+): Promise<{ listings: IListing[]; metadata: { total: number; page: number; limit: number } }> => {
+  const { location, bedrooms, minRent, maxRent, page = 1, limit = 10 } = queryOptions
+
+  // * Build filter object dynamically based on provided query options
+  const filter: {
+    landlord?: string
+    location?: { $regex: string; $options: string }
+    bedrooms?: number | { $gte: number }
+    rentAmount?: { $gte?: number; $lte?: number }
+  } = {}
+
+  filter.landlord = landlordId
+
+  // * Filter by location using case-insensitive regex
+  if (location) {
+    filter.location = { $regex: location, $options: 'i' }
+  }
+
+  // * Apply bedrooms filter:
+  // - If bedrooms is 1,2,3 use an exact match.
+  // - If bedrooms is 4, use $gte.
+  if (bedrooms !== undefined) {
+    if (bedrooms < 4) {
+      filter.bedrooms = bedrooms
+    } else {
+      filter.bedrooms = { $gte: bedrooms }
+    }
+  }
+
+  // * Filter by rent amount within a range
+  if (minRent !== undefined || maxRent !== undefined) {
+    filter.rentAmount = {}
+    if (minRent !== undefined) {
+      filter.rentAmount.$gte = minRent
+    }
+    if (maxRent !== undefined) {
+      filter.rentAmount.$lte = maxRent
+    }
+  }
+
+  // * Calculate how many documents to skip
+  const skip = (page - 1) * limit
+
+  // * Fetch the listings with pagination
+  const listings = await Listing.find(filter).skip(skip).limit(limit)
+
+  // * Get the total count of listings matching the filter
+  const total = await Listing.countDocuments(filter)
+
+  return {
+    listings,
+    metadata: {
+      total,
+      page,
+      limit
+    }
+  }
+}
+
 // * Get single listing details by ID
 const getListingById = async (id: string): Promise<IListing> => {
   const listing = await Listing.findById(id)
@@ -137,6 +206,7 @@ const deleteListing = async (id: string, userId: string): Promise<IListing> => {
 export const ListingService = {
   createListing,
   getAllListings,
+  getAllListingsForLandlord,
   getListingById,
   updateListing,
   deleteListing

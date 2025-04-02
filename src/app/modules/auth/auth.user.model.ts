@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs'
 import mongoose, { Model, Schema } from 'mongoose'
 
-import { httpStatusCode } from '../../enum/statusCode'
 import AppError from '../../errors/functions/AppError'
+import { httpStatusCode } from '../../utils/enum/statusCode'
 
 import { IUser, UserRole } from './auth.user.interface'
 

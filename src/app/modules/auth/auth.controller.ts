@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
-import { httpStatusCode } from '../../enum/statusCode'
 import { asyncHandler } from '../../utils/asyncHandler'
+import { httpStatusCode } from '../../utils/enum/statusCode'
 import sendResponse from '../../utils/sendResponse'
 
 import { AuthService } from './auth.service'

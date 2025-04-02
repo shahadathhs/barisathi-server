@@ -1,7 +1,7 @@
 import { ZodError } from 'zod'
 
-import { httpStatusCode } from '../enum/statusCode'
-import { IErrorResponse, IErrorSource } from '../interface/error'
+import { httpStatusCode } from '../utils/enum/statusCode'
+import { IErrorResponse, IErrorSource } from '../utils/interface/error'
 
 import AppError from './functions/AppError'
 import handleCastError from './functions/handleCastError'

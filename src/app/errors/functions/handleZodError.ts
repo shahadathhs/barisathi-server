@@ -1,7 +1,7 @@
 import { ZodError, ZodIssue } from 'zod'
 
-import { httpStatusCode } from '../../enum/statusCode'
-import { IErrorResponse, IErrorSource } from '../../interface/error'
+import { httpStatusCode } from '../../utils/enum/statusCode'
+import { IErrorResponse, IErrorSource } from '../../utils/interface/error'
 
 const handleZodError = (err: ZodError): IErrorResponse => {
   const errorSources: IErrorSource[] = err.issues.map((issue: ZodIssue) => {

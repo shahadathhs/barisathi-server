@@ -1,6 +1,6 @@
 import { Response } from 'express'
 
-import { ISuccessResponse } from '../interface/success'
+import { ISuccessResponse } from './interface/success'
 
 const sendResponse = (res: Response, data: ISuccessResponse) => {
   const response: ISuccessResponse = {

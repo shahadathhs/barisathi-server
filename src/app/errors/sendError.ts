@@ -1,7 +1,7 @@
 import { Response } from 'express'
 
 import { configuration } from '../config/config'
-import { IErrorResponse } from '../interface/error'
+import { IErrorResponse } from '../utils/interface/error'
 
 const sendError = (res: Response, error: IErrorResponse) => {
   res.status(error.statusCode).send({

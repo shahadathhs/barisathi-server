@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-import { httpStatusCode } from '../../enum/statusCode'
 import AppError from '../../errors/functions/AppError'
+import { httpStatusCode } from '../../utils/enum/statusCode'
 
 import { IBooking } from './booking.interface'
 import Booking from './booking.model'

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-import { httpStatusCode } from '../../enum/statusCode'
-import { IErrorResponse, IErrorSource } from '../../interface/error'
+import { httpStatusCode } from '../../utils/enum/statusCode'
+import { IErrorResponse, IErrorSource } from '../../utils/interface/error'
 
 const handleCastError = (error: mongoose.Error.CastError): IErrorResponse => {
   const errorSources: IErrorSource[] = [

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-import { httpStatusCode } from '../../enum/statusCode'
-import { IErrorResponse, IErrorSource } from '../../interface/error'
+import { httpStatusCode } from '../../utils/enum/statusCode'
+import { IErrorResponse, IErrorSource } from '../../utils/interface/error'
 
 const handleValidationError = (err: mongoose.Error.ValidationError): IErrorResponse => {
   const errorSources: IErrorSource[] = Object.values(err.errors).map(

@@ -33,12 +33,16 @@ router.get('/:id', ListingController.getListingById)
 // * Update listing (Landlord only)
 router.patch(
   '/:id',
-  Authentication(UserRole.LANDLORD),
+  Authentication(UserRole.LANDLORD, UserRole.ADMIN),
   validateRequest(ListingValidation.updateListingSchema),
   ListingController.updateListing
 )
 
 // * Delete listing (Landlord only)
-router.delete('/:id', Authentication(UserRole.LANDLORD), ListingController.deleteListing)
+router.delete(
+  '/:id',
+  Authentication(UserRole.ADMIN, UserRole.LANDLORD),
+  ListingController.deleteListing
+)
 
 export const ListingRoutes = router

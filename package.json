@@ -12,7 +12,7 @@
     "lint:fix": "eslint --fix .",
     "format:check": "prettier --ignore-path .gitignore --check \"**/*.+(js|ts|json)\"",
     "format:fix": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "re:deploy": "tsc && vercel --prod",
+    "re:deploy": "tsc && tsc-alias && vercel --prod",
     "jwtSecret": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
   },
   "keywords": [],

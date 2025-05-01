@@ -14,12 +14,14 @@ This repository contains the backend server for the Bari Sathi project. It serve
 ## Table of Contents
 
 - [Features](#features)
+- [📦 Packages Used](#-packages-used)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Environment Configuration](#environment-configuration)
 - [Running Locally](#running-locally)
 - [API Endpoints](#api-endpoints)
+- [🗄️ Models & Schemas](#️-models--schemas)
 
 ## Features
 
@@ -28,6 +30,45 @@ This repository contains the backend server for the Bari Sathi project. It serve
 - **Bookings Management:** Create bookings, fetch booking details, update booking status, and delete bookings.
 - **Role-Based Access Control:** Different endpoints accessible based on user roles (ADMIN, LANDLORD, TENANT).
 - **Middleware Integration:** Includes API info logging, error handling, and request validation.
+
+## 📦 Packages Used
+
+### Dependencies
+
+| Package      | Version |
+| ------------ | ------- |
+| bcryptjs     | ^3.0.0  |
+| cors         | ^2.8.5  |
+| dotenv       | ^16.4.5 |
+| express      | ^4.21.1 |
+| jsonwebtoken | ^9.0.2  |
+| mongoose     | ^8.8.2  |
+| ms           | ^2.1.3  |
+| nodemon      | ^3.1.7  |
+| winston      | ^3.17.0 |
+| zod          | ^3.23.8 |
+
+### Dev Dependencies
+
+| Package                          | Version  |
+| -------------------------------- | -------- |
+| @eslint/js                       | ^9.15.0  |
+| @types/cors                      | ^2.8.17  |
+| @types/express                   | ^5.0.0   |
+| @types/jsonwebtoken              | ^9.0.8   |
+| @types/node                      | ^22.9.1  |
+| @typescript-eslint/eslint-plugin | ^8.15.0  |
+| @typescript-eslint/parser        | ^8.15.0  |
+| eslint                           | ^9.15.0  |
+| eslint-define-config             | ^2.1.0   |
+| eslint-plugin-import             | ^2.31.0  |
+| globals                          | ^15.12.0 |
+| prettier                         | ^3.3.3   |
+| ts-node-dev                      | ^2.0.0   |
+| tsc-alias                        | ^1.8.13  |
+| tsconfig-paths                   | ^4.2.0   |
+| typescript                       | ^5.7.3   |
+| typescript-eslint                | ^8.15.0  |
 
 ## Getting Started
 
@@ -61,14 +102,14 @@ PORT=8080
 NODE_ENV=development
 
 # Database
-DATABASE_URL=test
+DATABASE_URL=<your-mongo-uri>
 
 # JWT
-JWT_SECRET=b5ef9a583e4408e50fbc548b4e45999adc3642c330677ba29483ac47cc9100a2
+JWT_SECRET=<your-jwt-secret>
 JWT_EXPIRES_IN=1d
 ```
 
-Make sure to replace the values with your actual configuration as needed.
+Replace placeholders with your actual values.
 
 ## Running Locally
 
@@ -96,92 +137,70 @@ To run the server locally, follow these steps:
 
 ## API Endpoints
 
-The server exposes several endpoints grouped into modules. Below is an overview of the available endpoints:
-
 ### Authentication Routes (`/api/auth`)
 
-- **Register a new user:**  
-  `POST /api/auth/register`  
-  _Validates request with registration schema._
-
-- **Login an existing user:**  
-  `POST /api/auth/login`
-
-- **Update user profile:**  
-  `PATCH /api/auth/update-profile`  
-  _Accessible to authenticated users (LANDLORD, TENANT, ADMIN)._
-
-- **Update user password:**  
-  `PATCH /api/auth/update-password`  
-  _Accessible to authenticated users._
-
-- **Update user delete status (soft delete):**  
-  `POST /api/auth/:id/delete`  
-  _Accessible to LANDLORD and TENANT._
-
-- **Retrieve all users:**  
-  `GET /api/auth/getAll`  
-  _Admin only._
-
-- **Update user role:**  
-  `PATCH /api/auth/:id/role`  
-  _Admin only._
-
-- **Update user active status:**  
-  `PATCH /api/auth/:id/active`  
-  _Admin only._
+| Method | Endpoint                    | Description                 | Auth                    |
+| ------ | --------------------------- | --------------------------- | ----------------------- |
+| POST   | `/api/auth/register`        | Register new user           | Public                  |
+| POST   | `/api/auth/login`           | Login user                  | Public                  |
+| PATCH  | `/api/auth/update-profile`  | Update own profile          | LANDLORD, TENANT, ADMIN |
+| PATCH  | `/api/auth/update-password` | Change own password         | Any authenticated       |
+| POST   | `/api/auth/:id/delete`      | Soft-delete user            | LANDLORD, TENANT        |
+| GET    | `/api/auth/getAll`          | List all users              | ADMIN                   |
+| PATCH  | `/api/auth/:id/role`        | Change a user’s role        | ADMIN                   |
+| PATCH  | `/api/auth/:id/active`      | Toggle user active/inactive | ADMIN                   |
 
 ### Listing Routes (`/api/listings`)
 
-- **Create a listing:**  
-  `POST /api/listings/`  
-  _Accessible to LANDLORD only._
-
-- **Get all listings (public):**  
-  `GET /api/listings/`
-
-- **Get all listings for a landlord:**  
-  `GET /api/listings/landlord`  
-  _Accessible to LANDLORD only._
-
-- **Get listing details:**  
-  `GET /api/listings/:id`  
-  _Public access._
-
-- **Update a listing:**  
-  `PATCH /api/listings/:id`  
-  _Accessible to LANDLORD and ADMIN._
-
-- **Delete a listing:**  
-  `DELETE /api/listings/:id`  
-  _Accessible to LANDLORD and ADMIN._
+| Method | Endpoint                 | Description                         | Auth            |
+| ------ | ------------------------ | ----------------------------------- | --------------- |
+| POST   | `/api/listings/`         | Create a listing                    | LANDLORD        |
+| GET    | `/api/listings/`         | Get all listings                    | Public          |
+| GET    | `/api/listings/landlord` | Get listings for logged-in landlord | LANDLORD        |
+| GET    | `/api/listings/:id`      | Get listing details                 | Public          |
+| PATCH  | `/api/listings/:id`      | Update a listing                    | LANDLORD, ADMIN |
+| DELETE | `/api/listings/:id`      | Delete a listing                    | LANDLORD, ADMIN |
 
 ### Booking Routes (`/api/bookings`)
 
-- **Create a booking:**  
-  `POST /api/bookings/`  
-  _Accessible to TENANT only._
+| Method | Endpoint                   | Description             | Auth                    |
+| ------ | -------------------------- | ----------------------- | ----------------------- |
+| POST   | `/api/bookings/`           | Create a booking        | TENANT                  |
+| GET    | `/api/bookings/`           | Get all bookings        | ADMIN                   |
+| GET    | `/api/bookings/tenant`     | Get tenant’s bookings   | TENANT                  |
+| GET    | `/api/bookings/landlord`   | Get landlord’s bookings | LANDLORD                |
+| GET    | `/api/bookings/:id`        | Get booking details     | ADMIN, LANDLORD, TENANT |
+| PATCH  | `/api/bookings/:id/status` | Update booking status   | LANDLORD, TENANT        |
+| DELETE | `/api/bookings/:id`        | Delete a booking        | ADMIN                   |
 
-- **Get all bookings:**  
-  `GET /api/bookings/`  
-  _Admin only._
+## 🗄️ Models & Schemas
 
-- **Get all bookings for a tenant:**  
-  `GET /api/bookings/tenant`  
-  _Accessible to TENANT only._
+### Mongoose Models
 
-- **Get all bookings for a landlord:**  
-  `GET /api/bookings/landlord`  
-  _Accessible to LANDLORD only._
+- **User** (`src/modules/auth/auth.model.ts`)  
+  Fields: `name`, `email` (unique), `phone` (unique), `password` (hashed), `role` (enum), `isActive`, `isDeleted`, timestamps.  
+  Methods: `matchPassword()`, `updatePassword()`, `toProfileJSON()`, `isAdmin()`.
 
-- **Get booking details:**  
-  `GET /api/bookings/:id`  
-  _Accessible to ADMIN, TENANT, and LANDLORD (if associated with the booking)._
+- **Listing** (`src/modules/listing/listing.model.ts`)  
+  Fields: `location`, `description`, `rentAmount`, `bedrooms`, `images[]`, `amenities[]`, `landlord` (ref), timestamps.
 
-- **Update booking status:**  
-  `PATCH /api/bookings/:id/status`  
-  _Accessible to LANDLORD and TENANT._
+- **Booking** (`src/modules/booking/booking.model.ts`)  
+  Fields: `_id`, `listing` (ref), `landlord` (ref), `tenant` (ref), `tenantMessage`, `status` (enum), `checkInDate`, `checkOutDate`, timestamps.
 
-- **Delete a booking:**  
-  `DELETE /api/bookings/:id`  
-  _Admin only._
+### Zod Validation Schemas
+
+- **AuthValidation** (`src/modules/auth/auth.validation.ts`)
+
+  - `registerUserZodSchema` (name, email, phone, password, role)
+  - `updateProfileZodSchema` (name, email, phone)
+
+- **ListingValidation** (`src/modules/listing/listing.validation.ts`)
+
+  - `createListingSchema` (location, description, rentAmount, bedrooms, images?, amenities?)
+  - `updateListingSchema` (optional fields for updates)
+
+- **BookingValidation** (`src/modules/booking/booking.validation.ts`)
+  - `createBookingSchema` (listing, checkInDate, checkOutDate, tenantMessage, landlord)
+  - `updateBookingSchema` (status enum)
+
+---

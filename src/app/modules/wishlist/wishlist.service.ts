@@ -8,10 +8,10 @@ import Wishlist from './wishlist.model'
 // * Create or update wishlist
 const createOrUpdateWishlist = async (
   userId: string,
-  bikeId: string,
+  listingId: string,
   action: 'add' | 'remove'
 ): Promise<IWishlist> => {
-  const bikeObjectId = new mongoose.Types.ObjectId(bikeId)
+  const bikeObjectId = new mongoose.Types.ObjectId(listingId)
   let wishlist = await Wishlist.findOne({ tenant: userId })
 
   if (!wishlist) {
@@ -21,25 +21,29 @@ const createOrUpdateWishlist = async (
 
     wishlist = await Wishlist.create({
       tenant: userId,
-      bikes: [bikeObjectId]
+      listings: [bikeObjectId]
     })
 
-    return (await Wishlist.findById(wishlist._id).populate('bikes')) as IWishlist
+    return (await Wishlist.findById(wishlist._id).populate('listings')) as IWishlist
   }
 
-  const bikeExists = wishlist.bikes.some(existingBikeId => existingBikeId.toString() === bikeId)
+  const listingExists = wishlist.listings.some(
+    existingListingId => existingListingId.toString() === listingId
+  )
 
-  if (action === 'add' && !bikeExists) {
-    wishlist.bikes.push(bikeObjectId)
+  if (action === 'add' && !listingExists) {
+    wishlist.listings.push(bikeObjectId)
     await wishlist.save()
   }
 
-  if (action === 'remove' && bikeExists) {
-    wishlist.bikes = wishlist.bikes.filter(existingBikeId => existingBikeId.toString() !== bikeId)
+  if (action === 'remove' && listingExists) {
+    wishlist.listings = wishlist.listings.filter(
+      existingListingId => existingListingId.toString() !== listingId
+    )
     await wishlist.save()
   }
 
-  const updatedWishlist = await Wishlist.findById(wishlist._id).populate('bikes')
+  const updatedWishlist = await Wishlist.findById(wishlist._id).populate('listings')
   if (!updatedWishlist) {
     throw new AppError(httpStatusCode.NOT_FOUND, 'Wishlist not found')
   }
@@ -49,9 +53,9 @@ const createOrUpdateWishlist = async (
 
 // * Get wishlist for tenant
 const getWishlistForTenant = async (userId: string): Promise<IWishlist> => {
-  const wishlist = await Wishlist.findOne({ tenant: userId }).populate('bikes')
+  const wishlist = await Wishlist.findOne({ tenant: userId }).populate('listings')
   if (!wishlist) {
-    throw new AppError(httpStatusCode.NOT_FOUND, 'Listing not found')
+    throw new AppError(httpStatusCode.NOT_FOUND, 'Wishlist not found for this user')
   }
 
   // * Return the wishlist

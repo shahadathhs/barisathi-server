@@ -7,10 +7,10 @@ import { WishlistService } from './wishlist.service'
 
 const createOrUpdateWishlist = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.user.userId
-  const bikeId = req.body.bikeId
+  const listingId = req.body.listingId
   const action = req.body.action
 
-  const result = await WishlistService.createOrUpdateWishlist(userId, bikeId, action)
+  const result = await WishlistService.createOrUpdateWishlist(userId, listingId, action)
   sendResponse(res, {
     statusCode: httpStatusCode.CREATED,
     success: true,

@@ -4,10 +4,10 @@ import { IWishlist } from './wishlist.interface'
 
 const WishlistSchema: Schema<IWishlist> = new mongoose.Schema(
   {
-    bikes: [
+    listings: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bike',
+        ref: 'Listing',
         required: [true, 'Bike reference is required']
       }
     ],

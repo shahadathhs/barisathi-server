@@ -1,6 +1,7 @@
 import { AuthRoutes } from 'app/modules/auth/auth.routes'
 import { BookingRoutes } from 'app/modules/booking/booking.routes'
 import { ListingRoutes } from 'app/modules/listing/listing.routes'
+import { WishlistRoutes } from 'app/modules/wishlist/wishlist.routes'
 import { Router } from 'express'
 
 const appRoutes = Router()
@@ -17,6 +18,10 @@ const moduleRoutes = [
   {
     path: '/bookings',
     route: BookingRoutes
+  },
+  {
+    path: '/wishlist',
+    route: WishlistRoutes
   }
 ]
 

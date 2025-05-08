@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Model, Schema } from 'mongoose'
 
 import { BookingStatus, IBooking } from './booking.interface'
 
@@ -16,4 +16,5 @@ const bookingSchema = new Schema<IBooking>(
   { timestamps: true }
 )
 
-export default mongoose.model<IBooking>('Booking', bookingSchema)
+const Booking: Model<IBooking> = mongoose.model<IBooking>('Booking', bookingSchema)
+export default Booking

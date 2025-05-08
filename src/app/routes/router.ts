@@ -1,3 +1,4 @@
+import { AnalyticsRoutes } from 'app/modules/analytics/analytics.routes'
 import { AuthRoutes } from 'app/modules/auth/auth.routes'
 import { BookingRoutes } from 'app/modules/booking/booking.routes'
 import { ListingRoutes } from 'app/modules/listing/listing.routes'
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: '/wishlist',
     route: WishlistRoutes
+  },
+  {
+    path: '/analytics',
+    route: AnalyticsRoutes
   }
 ]
 

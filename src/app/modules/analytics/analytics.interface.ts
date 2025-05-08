@@ -1,5 +1,5 @@
 export type Distribution = {
-  _id: string
+  _id: string | { year: number; month: number }
   count: number
 }
 

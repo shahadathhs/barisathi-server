@@ -48,7 +48,7 @@ const getAdminAnalytics = async (): Promise<AdminAnalytics> => {
 
   // * Normalize monthly bookings to YYYY-MM format
   const monthlyBookings = rawMonthly.map(item => {
-    const { year, month } = item._id as unknown as { year: number; month: number }
+    const { year, month } = item._id as { year: number; month: number }
     const monthStr = month.toString().padStart(2, '0')
     return { month: `${year}-${monthStr}`, count: item.count }
   })
